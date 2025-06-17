@@ -1119,7 +1119,7 @@
                     <ul>
                         <li>50% daily profit for 40 days (3000% total return)</li>
                         <li>Daily earnings credited automatically</li>
-                        <li>Minimum deposit: $2.00 (₱300)</li>
+                        <li>Minimum deposit: $6.00 (₱300)</li>
                         <li>Maximum deposit: $300.00 (₱15,000) per transaction</li>
                         <li>Unlimited number of deposits</li>
                         <li>Instant deposit approval</li>
@@ -1142,7 +1142,7 @@
                 
                 <div style="background-color: rgba(0, 184, 148, 0.1); padding: 15px; border-radius: 10px; margin-bottom: 20px; border-left: 4px solid var(--success);">
                     <h3 style="color: var(--success); margin-bottom: 10px; font-size: 18px;"><i class="fas fa-info-circle"></i> Deposit Limits</h3>
-                    <p style="font-size: 14px;">Minimum deposit: $2.00 (₱300) | Maximum deposit: $300.00 (₱15,000) per transaction</p>
+                    <p style="font-size: 14px;">Minimum deposit: $6.00 (₱300) | Maximum deposit: $300.00 (₱15,000) per transaction</p>
                     <p style="font-size: 12px; margin-top: 5px;">Fixed exchange rate: 1 USD = 50 PHP</p>
                 </div>
                 
@@ -1151,7 +1151,7 @@
                         <label for="depositAmount">Amount (USD)</label>
                         <div class="input-group">
                             <i class="fas fa-dollar-sign"></i>
-                            <input type="number" id="depositAmount" min="6" max="300" step="0.01" placeholder="Enter amount between $2-$300" required>
+                            <input type="number" id="depositAmount" min="6" max="300" step="0.01" placeholder="Enter amount between $6-$300" required>
                         </div>
                         <div class="php-conversion" id="depositPhpConversion">PHP: ₱0.00</div>
                     </div>
@@ -1235,7 +1235,7 @@
                         <label for="withdrawAmount">Amount (USD)</label>
                         <div class="input-group">
                             <i class="fas fa-dollar-sign"></i>
-                            <input type="number" id="withdrawAmount" min="6" step="0.01" placeholder="Enter amount (min $2)" required>
+                            <input type="number" id="withdrawAmount" min="2" step="0.01" placeholder="Enter amount (min $2)" required>
                         </div>
                         <small>Available balance: <span id="withdrawAvailableBalance">$0.00</span></small>
                         <div class="php-conversion" id="withdrawPhpConversion">PHP: ₱0.00</div>
@@ -1542,7 +1542,7 @@
             </div>
             
             <div class="copyright">
-                &copy; 2023 WealthCrypto. All rights reserved.
+                &copy; 2025 WealthCrypto. All rights reserved.
             </div>
         </footer>
     </div>
@@ -2228,7 +2228,7 @@
             }
             
             if (amount < 6 || amount > 300) {
-                showNotification('Deposit amount must be between $2 and $300', 'error');
+                showNotification('Deposit amount must be between $6 and $300', 'error');
                 return;
             }
             
@@ -2290,7 +2290,7 @@
             const method = document.getElementById('withdrawMethod').value;
             const wallet = document.getElementById('withdrawWallet').value;
             
-            if (amount < 6) {
+            if (amount < 2) {
                 showNotification('Minimum withdrawal amount is $2.00', 'error');
                 return;
             }
