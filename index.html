@@ -799,6 +799,46 @@
             display: block;
         }
         
+        .security-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        .security-item:last-child {
+            border-bottom: none;
+        }
+        
+        .security-info h4 {
+            margin-bottom: 5px;
+        }
+        
+        .security-info p {
+            color: var(--gray);
+            font-size: 14px;
+        }
+        
+        .security-status {
+            display: inline-flex;
+            align-items: center;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .security-status.enabled {
+            background-color: rgba(0, 184, 148, 0.1);
+            color: var(--success);
+        }
+        
+        .security-status.disabled {
+            background-color: rgba(214, 48, 49, 0.1);
+            color: var(--danger);
+        }
+        
         .php-conversion {
             background-color: rgba(253, 203, 110, 0.2);
             padding: 10px;
@@ -1074,12 +1114,12 @@
                 <p>Our premium investment offer:</p>
                 
                 <div class="plan-card">
-                    <div class="profit-badge">2000% MAX RETURN</div>
+                    <div class="profit-badge">3000% MAX RETURN</div>
                     <h3>Premium Crypto Plan</h3>
                     <ul>
-                        <li>50% daily profit for 40 days (2000% total return)</li>
+                        <li>50% daily profit for 40 days (3000% total return)</li>
                         <li>Daily earnings credited automatically</li>
-                        <li>Minimum deposit: $6.00 (₱300)</li>
+                        <li>Minimum deposit: $2.00 (₱300)</li>
                         <li>Maximum deposit: $300.00 (₱15,000) per transaction</li>
                         <li>Unlimited number of deposits</li>
                         <li>Instant deposit approval</li>
@@ -1102,7 +1142,7 @@
                 
                 <div style="background-color: rgba(0, 184, 148, 0.1); padding: 15px; border-radius: 10px; margin-bottom: 20px; border-left: 4px solid var(--success);">
                     <h3 style="color: var(--success); margin-bottom: 10px; font-size: 18px;"><i class="fas fa-info-circle"></i> Deposit Limits</h3>
-                    <p style="font-size: 14px;">Minimum deposit: $6.00 (₱300) | Maximum deposit: $300.00 (₱15,000) per transaction</p>
+                    <p style="font-size: 14px;">Minimum deposit: $2.00 (₱300) | Maximum deposit: $300.00 (₱15,000) per transaction</p>
                     <p style="font-size: 12px; margin-top: 5px;">Fixed exchange rate: 1 USD = 50 PHP</p>
                 </div>
                 
@@ -1111,7 +1151,7 @@
                         <label for="depositAmount">Amount (USD)</label>
                         <div class="input-group">
                             <i class="fas fa-dollar-sign"></i>
-                            <input type="number" id="depositAmount" min="6" max="300" step="0.01" placeholder="Enter amount between $6-$300" required>
+                            <input type="number" id="depositAmount" min="6" max="300" step="0.01" placeholder="Enter amount between $2-$300" required>
                         </div>
                         <div class="php-conversion" id="depositPhpConversion">PHP: ₱0.00</div>
                     </div>
@@ -1186,7 +1226,7 @@
                 
                 <div style="background-color: rgba(214, 48, 49, 0.1); padding: 15px; border-radius: 10px; margin-bottom: 20px; border-left: 4px solid var(--danger);">
                     <h3 style="color: var(--danger); margin-bottom: 10px; font-size: 18px;"><i class="fas fa-exclamation-circle"></i> Withdrawal Information</h3>
-                    <p style="font-size: 14px;">Minimum withdrawal: $2.00 (₱100) | 10% withdrawal fee applies | Processed within 24 hours</p>
+                    <p style="font-size: 14px;">Minimum withdrawal: $2.00 (₱300) | 10% withdrawal fee applies | Processed within 24 hours</p>
                     <p style="font-size: 12px; margin-top: 5px;">Fixed exchange rate: 1 USD = 50 PHP</p>
                 </div>
                 
@@ -1195,7 +1235,7 @@
                         <label for="withdrawAmount">Amount (USD)</label>
                         <div class="input-group">
                             <i class="fas fa-dollar-sign"></i>
-                            <input type="number" id="withdrawAmount" min="2" step="0.01" placeholder="Enter amount (min $2)" required>
+                            <input type="number" id="withdrawAmount" min="6" step="0.01" placeholder="Enter amount (min $2)" required>
                         </div>
                         <small>Available balance: <span id="withdrawAvailableBalance">$0.00</span></small>
                         <div class="php-conversion" id="withdrawPhpConversion">PHP: ₱0.00</div>
@@ -1383,6 +1423,11 @@
                     </div>
                 </div>
                 
+                <div class="profile-tabs">
+                    <div class="profile-tab active" data-tab="personal">Personal Info</div>
+                    <div class="profile-tab" data-tab="security">Security</div>
+                </div>
+                
                 <!-- Personal Info Tab -->
                 <div id="personalInfo" class="profile-content active">
                     <form id="profileForm">
@@ -1426,6 +1471,7 @@
                                     <option value="MY">Malaysia</option>
                                     <option value="JP">Japan</option>
                                     <option value="KR">South Korea</option>
+                                    <!-- Add more countries as needed -->
                                 </select>
                             </div>
                         </div>
@@ -1436,6 +1482,43 @@
                             </button>
                         </div>
                     </form>
+                </div>
+                
+                <!-- Security Tab -->
+                <div id="securitySettings" class="profile-content">
+                    <div class="security-item">
+                        <div class="security-info">
+                            <h4>Password</h4>
+                            <p>Change your account password</p>
+                        </div>
+                        <button class="btn btn-outline" id="changePasswordBtn">Change Password</button>
+                    </div>
+                    
+                    <div class="security-item">
+                        <div class="security-info">
+                            <h4>Two-Factor Authentication</h4>
+                            <p>Add an extra layer of security to your account</p>
+                        </div>
+                        <span class="security-status disabled" id="twoFactorStatus">
+                            <i class="fas fa-times-circle"></i> Disabled
+                        </span>
+                    </div>
+                    
+                    <div class="security-item">
+                        <div class="security-info">
+                            <h4>Login Activity</h4>
+                            <p>View recent login attempts to your account</p>
+                        </div>
+                        <button class="btn btn-outline" id="viewLoginActivityBtn">View Activity</button>
+                    </div>
+                    
+                    <div class="security-item">
+                        <div class="security-info">
+                            <h4>Account Verification</h4>
+                            <p>Verify your identity to increase account limits</p>
+                        </div>
+                        <button class="btn btn-outline" id="verifyAccountBtn">Verify Now</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1509,7 +1592,6 @@
         let currentUser = null;
         let users = JSON.parse(localStorage.getItem('wealthCryptoUsers')) || [];
         let transactions = JSON.parse(localStorage.getItem('wealthCryptoTransactions')) || [];
-        let lastWithdrawalDate = localStorage.getItem('lastWithdrawalDate') || null;
         
         // DOM Elements
         const authModal = document.getElementById('authModal');
@@ -1648,7 +1730,7 @@
             // Active investments (deposits not yet matured)
             const activeInvestments = deposits.filter(d => {
                 const depositDate = new Date(d.date);
-                const daysPassed = (new Date() - depositDate) / (1000 * 60 * 60 * 24);
+                const daysPassed = (new Date() - depositDate) / (1000 * 40 * 40 * 24);
                 return daysPassed < 40; // 40-day investment period
             });
             
@@ -1804,14 +1886,14 @@
             deposits.forEach(deposit => {
                 const depositDate = new Date(deposit.date);
                 const today = new Date();
-                const daysPassed = Math.floor((today - depositDate) / (1000 * 60 * 60 * 24));
+                const daysPassed = Math.floor((today - depositDate) / (1000 * 40 * 40 * 24));
                 
                 // Check if we need to add earnings for today
                 const lastEarning = userTransactions
                     .filter(t => t.type === 'earning' && t.referenceId === deposit.id)
                     .sort((a, b) => new Date(b.date) - new Date(a.date))[0];
                 
-                const lastEarningDay = lastEarning ? Math.floor((new Date(lastEarning.date) - depositDate) / (1000 * 60 * 60 * 24)) : -1;
+                const lastEarningDay = lastEarning ? Math.floor((new Date(lastEarning.date) - depositDate) / (1000 * 40 * 40 * 24)) : -1;
                 
                 if (daysPassed > lastEarningDay && daysPassed <= 40) {
                     // Add daily earning (50% of deposit amount divided by 40 days)
@@ -1844,20 +1926,6 @@
         // Generate random ID
         function generateId() {
             return Math.random().toString(36).substr(2, 9);
-        }
-        
-        // Check if user has already withdrawn today
-        function hasWithdrawnToday() {
-            if (!lastWithdrawalDate) return false;
-            
-            const lastWithdrawal = new Date(lastWithdrawalDate);
-            const today = new Date();
-            
-            return (
-                lastWithdrawal.getDate() === today.getDate() &&
-                lastWithdrawal.getMonth() === today.getMonth() &&
-                lastWithdrawal.getFullYear() === today.getFullYear()
-            );
         }
         
         // Event Listeners
@@ -1960,6 +2028,18 @@
                 
                 // Scroll to top of the tab content
                 document.getElementById(tabId).scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+        
+        // Profile tab switching
+        document.querySelectorAll('.profile-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.profile-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.profile-content').forEach(c => c.classList.remove('active'));
+                
+                this.classList.add('active');
+                const tabId = this.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
             });
         });
         
@@ -2148,7 +2228,7 @@
             }
             
             if (amount < 6 || amount > 300) {
-                showNotification('Deposit amount must be between $6 and $300', 'error');
+                showNotification('Deposit amount must be between $2 and $300', 'error');
                 return;
             }
             
@@ -2210,7 +2290,7 @@
             const method = document.getElementById('withdrawMethod').value;
             const wallet = document.getElementById('withdrawWallet').value;
             
-            if (amount < 2) {
+            if (amount < 6) {
                 showNotification('Minimum withdrawal amount is $2.00', 'error');
                 return;
             }
@@ -2222,12 +2302,6 @@
             
             if (!wallet) {
                 showNotification('Please enter your wallet address/details', 'error');
-                return;
-            }
-            
-            // Check if user has already withdrawn today
-            if (hasWithdrawnToday()) {
-                showNotification('You can only withdraw once per day', 'error');
                 return;
             }
             
@@ -2252,10 +2326,6 @@
             
             transactions.push(withdrawalTransaction);
             localStorage.setItem('wealthCryptoTransactions', JSON.stringify(transactions));
-            
-            // Update last withdrawal date
-            lastWithdrawalDate = new Date().toISOString();
-            localStorage.setItem('lastWithdrawalDate', lastWithdrawalDate);
             
             // Show success message with sweet animation
             const submitBtn = this.querySelector('button[type="submit"]');
@@ -2353,7 +2423,7 @@
             pendingWithdrawals.forEach(withdrawal => {
                 // Mark as completed after 24 hours
                 const withdrawalDate = new Date(withdrawal.date);
-                const hoursPassed = (new Date() - withdrawalDate) / (1000 * 60 * 60);
+                const hoursPassed = (new Date() - withdrawalDate) / (1000 * 40 * 40);
                 
                 if (hoursPassed >= 24) {
                     withdrawal.status = 'completed';
