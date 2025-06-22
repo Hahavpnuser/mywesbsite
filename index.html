@@ -703,6 +703,18 @@
             border-left: 4px solid var(--info);
         }
         
+        .total-deposits {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-light);
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            background-color: rgba(78, 68, 206, 0.1);
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--primary-light);
+        }
+        
         .payment-method {
             display: flex;
             align-items: center;
@@ -1301,7 +1313,7 @@
                 padding: 15px;
             }
             
-            .daily-earnings {
+            .daily-earnings, .total-deposits {
                 font-size: 1.2rem;
                 padding: 10px;
             }
@@ -1637,11 +1649,17 @@
                 
                 <div class="wallet-balance">
                     Balance: <span id="walletBalance">0.00</span> USDT (<span id="walletBalancePHP">₱0.00</span>)
+                    <small style="display: block; font-size: 0.9rem; margin-top: 5px; color: var(--text-secondary);">Available for withdrawal</small>
                 </div>
                 
                 <div class="daily-earnings">
                     Daily Earnings: <span id="dailyEarningsAmount">0.00</span> USDT (<span id="dailyEarningsAmountPHP">₱0.00</span>)
                     <small style="display: block; font-size: 0.9rem; margin-top: 5px; color: var(--text-secondary);">Accumulated from active investments</small>
+                </div>
+                
+                <div class="total-deposits">
+                    Total Deposits: <span id="totalDeposits">0.00</span> USDT (<span id="totalDepositsPHP">₱0.00</span>)
+                    <small style="display: block; font-size: 0.9rem; margin-top: 5px; color: var(--text-secondary);">All your deposited funds</small>
                 </div>
                 
                 <div class="form-group">
@@ -1975,35 +1993,35 @@
         // Currently selected investment product
         let selectedProduct = null;
         
-        // Investment products - UPDATED TO MATCH YOUR EXAMPLE
+        // Investment products
         const investmentProducts = [
             {
                 id: 'starter',
                 name: 'Starter Package',
-                amount: 10.00, // Changed from 5 to 10
+                amount: 10.00,
                 term: 30,
                 returnPercent: 50,
                 features: [
                     'Perfect for beginners',
                     'Low risk investment',
-                    'Daily earnings: $0.50 (₱25)',
-                    'Total return: $15 (₱750) in 30 days',
+                    'Daily earnings (0.50 USDT/day)',
                     '24/7 support'
-                ]
+                ],
+                dailyEarnings: 0.50 // Fixed $0.50 daily earnings for $10 investment
             },
             {
                 id: 'standard',
                 name: 'Standard Package',
-                amount: 25.00,
+                amount: 50.00,
                 term: 30,
                 returnPercent: 50,
                 features: [
                     'Best value for money',
-                    'Daily earnings: $1.25 (₱62.50)',
-                    'Total return: $37.50 (₱1,875)',
+                    'Popular choice (2.50 USDT/day)',
                     'Priority support',
                     'Bonus 1% on referrals'
-                ]
+                ],
+                dailyEarnings: 2.50 // Fixed $2.50 daily earnings for $50 investment
             },
             {
                 id: 'premium',
@@ -2012,13 +2030,12 @@
                 term: 30,
                 returnPercent: 50,
                 features: [
-                    'High returns',
-                    'Daily earnings: $5.00 (₱250)',
-                    'Total return: $150 (₱7,500)',
+                    'High returns (5.00 USDT/day)',
                     'VIP support',
                     'Weekly reports',
                     'Bonus 2% on referrals'
-                ]
+                ],
+                dailyEarnings: 5.00 // Fixed $5.00 daily earnings for $100 investment
             },
             {
                 id: 'elite',
@@ -2027,13 +2044,12 @@
                 term: 30,
                 returnPercent: 50,
                 features: [
-                    'Maximum returns',
-                    'Daily earnings: $25.00 (₱1,250)',
-                    'Total return: $750 (₱37,500)',
+                    'Maximum returns (25.00 USDT/day)',
                     'Dedicated account manager',
                     'Daily reports',
                     'Bonus 3% on referrals'
-                ]
+                ],
+                dailyEarnings: 25.00 // Fixed $25.00 daily earnings for $500 investment
             },
             {
                 id: 'custom',
@@ -2043,8 +2059,6 @@
                 returnPercent: 50,
                 features: [
                     'Choose your own amount',
-                    'Daily earnings: 5% of investment',
-                    'Total return: 50% in 30 days',
                     'Flexible terms available',
                     'Personalized support',
                     'All features included'
@@ -2220,7 +2234,7 @@
             });
         });
         
-        // Load investment products - UPDATED TO SHOW DAILY EARNINGS IN FEATURES
+        // Load investment products
         function loadInvestmentProducts() {
             const container = document.getElementById('investmentProducts');
             if (!container) return;
@@ -2234,7 +2248,6 @@
                 productCard.onclick = () => selectProduct(product);
                 
                 const returnAmount = product.amount * (product.returnPercent / 100);
-                const dailyEarnings = returnAmount / product.term;
                 
                 if (product.custom) {
                     productCard.innerHTML = `
@@ -2307,7 +2320,7 @@
             }
             
             const returnAmount = amount * (product.returnPercent / 100);
-            const dailyEarnings = returnAmount / product.term;
+            const dailyEarnings = product.dailyEarnings || (amount * 0.05); // Use fixed daily earnings if specified
             
             // Update display
             document.getElementById('selectedProductDisplay').style.display = 'block';
@@ -2351,6 +2364,7 @@
                 wallet: 'TDEMO123456789012345678901234567890',
                 balance: 12.50,
                 dailyEarnings: 1.25,
+                totalDeposits: 15.00,
                 investments: [],
                 history: [],
                 transactions: [
@@ -2363,20 +2377,20 @@
                     },
                     {
                         id: Date.now() - 172800000,
-                        amount: -10.00, // Changed from -5 to -10 to match example
+                        amount: -5.00,
                         description: 'GCash Investment',
                         date: new Date(Date.now() - 172800000).toISOString(),
                         status: 'completed'
                     },
                     {
                         id: Date.now() - 86400000,
-                        amount: 0.50, // Changed from 0.25 to 0.50 to match example
+                        amount: 0.50,
                         description: 'Daily Earnings',
                         date: new Date(Date.now() - 86400000).toISOString(),
                         status: 'completed'
                     }
                 ],
-                totalInvested: 10.00, // Changed from 15 to 10 to match example
+                totalInvested: 15.00,
                 totalReturns: 7.50,
                 settings: {
                     twoFactorEnabled: false
@@ -2384,7 +2398,7 @@
                 lastEarningsDate: new Date().getTime()
             };
             
-            // Add a sample investment if none exists - UPDATED TO MATCH YOUR EXAMPLE
+            // Add a sample investment if none exists
             if (users[demoEmail].investments.length === 0) {
                 const startDate = new Date();
                 const endDate = new Date();
@@ -2392,13 +2406,13 @@
                 
                 users[demoEmail].investments.push({
                     id: Date.now(),
-                    amount: 10.00, // $10 investment
+                    amount: 10.00,
                     startDate: startDate.getTime(),
                     endDate: endDate.getTime(),
                     walletAddress: users[demoEmail].wallet,
                     status: 'active',
                     paymentMethod: 'USDT',
-                    dailyEarnings: 0.50, // $0.50 daily (5% of $10)
+                    dailyEarnings: 0.50, // Fixed $0.50 daily earnings for $10 investment
                     productName: 'Starter Package'
                 });
             }
@@ -2410,14 +2424,14 @@
                 
                 users[demoEmail].history.push({
                     id: Date.now(),
-                    amount: 10.00, // Changed from 5 to 10 to match example
+                    amount: 5.00,
                     startDate: startDate.getTime(),
                     endDate: endDate.getTime(),
                     walletAddress: users[demoEmail].wallet,
                     status: 'completed',
                     paymentMethod: 'GCash',
-                    returnAmount: 15.00, // 50% return (changed from 7.50 to 15)
-                    productName: 'Starter Package'
+                    returnAmount: 7.50, // 50% return
+                    productName: 'Standard Package'
                 });
             }
             
@@ -2462,6 +2476,9 @@
                 if (user.lastEarningsDate === undefined) {
                     user.lastEarningsDate = new Date().getTime();
                 }
+                if (user.totalDeposits === undefined) {
+                    user.totalDeposits = 0;
+                }
                 
                 // Update 2FA status
                 updateTwoFactorStatus();
@@ -2496,7 +2513,7 @@
             earningsInterval = setInterval(calculateDailyEarnings, DAILY_EARNINGS_INTERVAL);
         }
         
-        // Calculate daily earnings from active investments (5% daily for 50% in 30 days)
+        // Calculate daily earnings from active investments (fixed amounts based on product)
         function calculateDailyEarnings() {
             if (!currentUser) return;
             
@@ -2510,10 +2527,11 @@
             if (now - lastEarningsDate >= DAILY_EARNINGS_INTERVAL) {
                 let totalDailyEarnings = 0;
                 
-                // Calculate earnings for each active investment (5% daily for 50% in 30 days)
+                // Calculate earnings for each active investment
                 user.investments.forEach(investment => {
                     if (investment.status === 'active') {
-                        const dailyEarning = investment.amount * 0.05; // 5% daily (changed from 1.67% to 5%)
+                        // Use the fixed daily earnings amount for the investment
+                        const dailyEarning = investment.dailyEarnings || (investment.amount * 0.05); // 5% daily as fallback
                         totalDailyEarnings += dailyEarning;
                         
                         // Add transaction for this investment's earnings
@@ -2556,6 +2574,12 @@
             if (document.getElementById('dailyEarningsAmount')) {
                 document.getElementById('dailyEarningsAmount').textContent = user.dailyEarnings?.toFixed(4) || '0.0000';
                 document.getElementById('dailyEarningsAmountPHP').textContent = formatPhp(usdToPhp(user.dailyEarnings || 0));
+            }
+            
+            // Update total deposits display
+            if (document.getElementById('totalDeposits')) {
+                document.getElementById('totalDeposits').textContent = user.totalDeposits?.toFixed(2) || '0.00';
+                document.getElementById('totalDepositsPHP').textContent = formatPhp(usdToPhp(user.totalDeposits || 0));
             }
         }
         
@@ -2654,6 +2678,7 @@
                     wallet: '',
                     balance: 0,
                     dailyEarnings: 0,
+                    totalDeposits: 0,
                     investments: [],
                     history: [],
                     transactions: [],
@@ -2866,15 +2891,16 @@
                 investment.returnAmount || (investment.amount * 1.50).toFixed(2) : 
                 (investment.amount * 1.50).toFixed(2);
             
-            const dailyEarnings = investment.amount * 0.05; // 5% daily (50% over 30 days)
+            const dailyEarnings = investment.dailyEarnings || (investment.amount * 0.05); // Use fixed daily earnings if specified
+            const dailyEarningsPHP = usdToPhp(dailyEarnings);
             
             item.innerHTML = `
                 <p>Product: <span>${investment.productName || 'Custom Investment'}</span></p>
                 <p>Amount: <span class="highlight">${investment.amount.toFixed(2)} USDT (${formatPhp(usdToPhp(investment.amount))})</span></p>
                 <p>Start Date: <span>${new Date(investment.startDate).toLocaleDateString()}</span></p>
-                <p>End Date: <span>${new Date(investment.endDate).toLocaleDateString()}</span></p>
+                <p>${!isHistory ? 'End Date' : 'Completed Date'}: <span>${new Date(investment.endDate).toLocaleDateString()}</span></p>
                 <p>Payment Method: <span>${investment.paymentMethod || 'USDT'}</span></p>
-                ${!isHistory ? `<p>Daily Earnings: <span class="highlight">${dailyEarnings.toFixed(4)} USDT (${formatPhp(usdToPhp(dailyEarnings))})</span> (5%)</p>` : ''}
+                ${!isHistory ? `<p>Daily Earnings: <span class="highlight">${dailyEarnings.toFixed(4)} USDT (${formatPhp(dailyEarningsPHP)})</span></p>` : ''}
                 ${status}
                 <p>${isHistory ? 'Returned' : 'Expected Return'}: <span class="highlight">${returnAmount} USDT (${formatPhp(usdToPhp(returnAmount))})</span></p>
             `;
@@ -2910,7 +2936,7 @@
             document.getElementById('withdrawReceive').textContent = receive;
             document.getElementById('withdrawReceivePHP').textContent = formatPhp(usdToPhp(receive));
             
-            // Update available balance
+            // Update available balance (balance + daily earnings)
             if (currentUser && users[currentUser.email]) {
                 const user = users[currentUser.email];
                 const available = (user.balance + (user.dailyEarnings || 0)).toFixed(2);
@@ -3098,6 +3124,9 @@
                 const endDate = new Date();
                 endDate.setDate(startDate.getDate() + selectedProduct.term);
                 
+                // Calculate daily earnings - use fixed amount if specified, otherwise 5% of investment
+                const dailyEarnings = selectedProduct.dailyEarnings || (amount * 0.05);
+                
                 const investment = {
                     id: Date.now(),
                     productName: selectedProduct.name,
@@ -3107,7 +3136,7 @@
                     walletAddress: useMethod === 'USDT' ? walletAddress : useMethod,
                     status: 'active',
                     paymentMethod: useMethod,
-                    dailyEarnings: amount * 0.05 // 5% daily (changed from 1.67% to 5%)
+                    dailyEarnings: dailyEarnings
                 };
                 
                 // Add to user's investments
@@ -3117,11 +3146,12 @@
                 }
                 user.investments.push(investment);
                 
-                // Update total invested
+                // Update total invested and total deposits
                 user.totalInvested = (user.totalInvested || 0) + amount;
+                user.totalDeposits = (user.totalDeposits || 0) + amount;
                 
-                // Add transaction
-                addTransaction(-amount, `${useMethod} Investment (${selectedProduct.name})`);
+                // Add transaction (no negative amount since we're not deducting from balance)
+                addTransaction(0, `${useMethod} Investment (${selectedProduct.name})`);
                 
                 // Save updated data
                 saveUsersData();
@@ -3183,20 +3213,11 @@
             const user = users[currentUser.email];
             if (!user) return;
             
-            // Calculate total available balance (balance + daily earnings)
-            const totalBalance = (user.balance || 0) + (user.dailyEarnings || 0);
-            
+            // Update balance display (only shows main balance, not including daily earnings)
             const balanceElement = document.getElementById('walletBalance');
             if (balanceElement) {
-                balanceElement.textContent = totalBalance.toFixed(4);
-                document.getElementById('walletBalancePHP').textContent = formatPhp(usdToPhp(totalBalance));
-            }
-            
-            // Update available balance in withdrawal section
-            const availableBalanceElement = document.getElementById('availableBalance');
-            if (availableBalanceElement) {
-                availableBalanceElement.textContent = totalBalance.toFixed(4);
-                document.getElementById('availableBalancePHP').textContent = formatPhp(usdToPhp(totalBalance));
+                balanceElement.textContent = (user.balance || 0).toFixed(2);
+                document.getElementById('walletBalancePHP').textContent = formatPhp(usdToPhp(user.balance || 0));
             }
             
             // Update daily earnings display
@@ -3204,6 +3225,21 @@
             if (dailyEarningsElement) {
                 dailyEarningsElement.textContent = (user.dailyEarnings || 0).toFixed(4);
                 document.getElementById('dailyEarningsAmountPHP').textContent = formatPhp(usdToPhp(user.dailyEarnings || 0));
+            }
+            
+            // Update total deposits display
+            const totalDepositsElement = document.getElementById('totalDeposits');
+            if (totalDepositsElement) {
+                totalDepositsElement.textContent = (user.totalDeposits || 0).toFixed(2);
+                document.getElementById('totalDepositsPHP').textContent = formatPhp(usdToPhp(user.totalDeposits || 0));
+            }
+            
+            // Update available balance in withdrawal section (balance + daily earnings)
+            const availableBalanceElement = document.getElementById('availableBalance');
+            if (availableBalanceElement) {
+                const available = (user.balance || 0) + (user.dailyEarnings || 0);
+                availableBalanceElement.textContent = available.toFixed(2);
+                document.getElementById('availableBalancePHP').textContent = formatPhp(usdToPhp(available));
             }
         }
         
@@ -3230,31 +3266,18 @@
             user.transactions.unshift(transaction);
             
             // Update balance if completed
-            if (status === 'completed') {
-                if (amount > 0) {
-                    // For positive transactions (earnings, returns)
-                    if (description.includes('Earnings')) {
-                        // Add to daily earnings
-                        user.dailyEarnings = (user.dailyEarnings || 0) + amount;
-                    } else {
-                        // Add to main balance
-                        user.balance = (user.balance || 0) + amount;
-                        
-                        // Update total returns if this is a return
-                        if (description.includes('Return')) {
-                            user.totalReturns = (user.totalReturns || 0) + amount;
-                        }
-                    }
+            if (status === 'completed' && amount > 0) {
+                // For positive transactions (earnings, returns)
+                if (description.includes('Earnings')) {
+                    // Add to daily earnings
+                    user.dailyEarnings = (user.dailyEarnings || 0) + amount;
                 } else {
-                    // For negative transactions (investments, withdrawals)
-                    // First try to deduct from daily earnings
-                    if (user.dailyEarnings >= Math.abs(amount)) {
-                        user.dailyEarnings += amount; // amount is negative
-                    } else {
-                        // If not enough in daily earnings, deduct from main balance
-                        const remaining = amount + user.dailyEarnings;
-                        user.dailyEarnings = 0;
-                        user.balance += remaining;
+                    // Add to main balance
+                    user.balance = (user.balance || 0) + amount;
+                    
+                    // Update total returns if this is a return
+                    if (description.includes('Return')) {
+                        user.totalReturns = (user.totalReturns || 0) + amount;
                     }
                 }
             }
@@ -3345,7 +3368,7 @@
             const totalAvailable = (user.balance || 0) + (user.dailyEarnings || 0);
             
             if (amount > totalAvailable) {
-                showNotification('Insufficient balance', 'error');
+                showNotification(`Insufficient balance. Available: $${totalAvailable.toFixed(2)}`, 'error');
                 return;
             }
             
@@ -3370,7 +3393,7 @@
             } else if (currentWithdrawMethod === 'gcash') {
                 const gcashNumber = document.getElementById('gcashWithdrawNumber').value.trim();
                 if (!gcashNumber || !/^09\d{9}$/.test(gcashNumber)) {
-                    showNotification('Please enter a valid GCash number', 'error');
+                    showNotification('Please enter a valid GCash number (09xxxxxxxxx)', 'error');
                     isValid = false;
                 } else {
                     description = 'Withdrawal to GCash';
